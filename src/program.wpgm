@@ -1,0 +1,40 @@
+
+import wollok.game.*
+import gameDemo.*
+
+program demo {
+
+	game.title("Demo Aventuras")
+	game.width(12)
+	game.height(12)
+	game.ground("ground.png")
+	
+	player.position(game.center())
+	
+	keyboard.up().onPressDo ({player.moveteArriba()})	
+	keyboard.down().onPressDo ({player.moveteAbajo()})	
+	keyboard.left().onPressDo ({player.moveteIzquierda()})	
+	keyboard.right().onPressDo ({player.moveteDerecha()})
+	keyboard.m().onPressDo({ 
+		game.say(player, "Maiz Plantado: " +  player.cantidadDeMaiz())
+	}
+	)	
+	
+	keyboard.p().onPressDo ({
+		var maiz = new Maiz(position = player.position().right(1))
+		player.agregarMaiz(maiz)
+		game.addVisual(maiz)
+		
+	})
+	
+	game.addVisual(player)
+	
+	game.whenCollideDo(player, { maiz =>  
+			player.moveteA(game.origin())
+			player.sacarMaiz(maiz)
+			game.removeVisual(maiz)	
+	} )
+		
+	game.start()
+
+}
